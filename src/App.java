@@ -1,7 +1,7 @@
-import java.util.Scanner;
-
 public class App {
-    public static void main(String[] args) throws Exception {
-        System.out.println("Selamat datang di RoTan!");
+    public static void main(String[] args) {
+        RoTan app = new RoTan();
+
+        app.mulai();
     }
 }
