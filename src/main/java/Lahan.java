@@ -60,6 +60,7 @@ public class Lahan {
         lahan.removeIf((item) -> item.kode == kode);
 
         try {
+            Aktivitas.hapusAktivitasLahan(kode);
             Lahan.commit(lahan);
         } catch (Exception e) {
             throw e;
