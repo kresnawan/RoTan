@@ -2,7 +2,6 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.Queue;
 
@@ -19,9 +18,6 @@ public class RoTan {
 
         System.out.println("Selamat datang di RoTan..!");
         System.out.println("Aplikasi ini dapat membantu kamu buat mencatat pertumbuhan tanaman.");
-
-        String hasil = Lahan.insertLahan(new Lahan(12));
-        System.out.println(hasil);
     }
 
     private void muatData() throws IOException {

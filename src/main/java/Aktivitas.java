@@ -1,37 +1,93 @@
-import java.time.Instant;
+import java.io.IOException;
+import java.lang.reflect.Type;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.time.LocalDate;
-import java.util.EmptyStackException;
+import java.util.ArrayList;
 import java.util.Stack;
 
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+
+import utils.Kode;
+
 public class Aktivitas {
-    long kode;
+    int kode;
+    int kodeLahan;
     String nama;
     LocalDate tanggalMulai;
     String namaTumbuhan;
     String catatan;
     Stack<FaseAktivitas> fase = new Stack<FaseAktivitas>();
 
-    public Aktivitas(LocalDate tanggalMulai, String namaTumbuhan, String catatan) {
+    public Aktivitas(LocalDate tanggalMulai, String nama, String namaTumbuhan, String catatan, int kodeLahan) {
         this.tanggalMulai = tanggalMulai;
         this.namaTumbuhan = namaTumbuhan;
         this.catatan = catatan;
+        this.nama = nama;
 
-        this.kode = Instant.now().toEpochMilli();
+        this.kode = Kode.generateKode("aktivitas");
+        this.kodeLahan = kodeLahan;
     }
 
-    public void rollbackFase() throws EmptyStackException {
+    public static ArrayList<Aktivitas> getAktivitasLahan(int kodeLahan) {
+        ArrayList<Aktivitas> aktivitas = Aktivitas.getSemua();
+        aktivitas.removeIf(item -> item.kodeLahan != kodeLahan);
+        return aktivitas;
+    }
+
+    // public void rollbackFase() throws EmptyStackException {
+    //     try {
+    //         this.fase.pop();
+    //     } catch (EmptyStackException e) {
+    //         throw e;
+    //     }
+    // }
+
+    public static void insert(Aktivitas aktivitas) throws Exception {
+        ArrayList<Aktivitas> akt = Aktivitas.getSemua();
+        akt.add(aktivitas);
+        akt.sort((l1, l2) -> Integer.compare(l1.kode, l2.kode));
+
+        Aktivitas.commit(akt);
+    }
+
+    public static ArrayList<Aktivitas> getSemua() {
+        Path FILE_PATH = Paths.get(System.getProperty("user.home"), ".rotan", "aktivitas.json");
+        Gson gson = new Gson();
+        
+        if (!Files.exists(FILE_PATH)) {
+            return new ArrayList<>();
+        }
+
         try {
-            this.fase.pop();
-        } catch (EmptyStackException e) {
-            throw e;
+            String jsonString = Files.readString(FILE_PATH);
+
+            if (jsonString.trim().isEmpty()) {
+                return new ArrayList<>();
+            }
+
+            Type listType = new TypeToken<ArrayList<Aktivitas>>() {
+            }.getType();
+
+            return gson.fromJson(jsonString, listType);
+
+        } catch (IOException e) {
+            return new ArrayList<>();
         }
     }
 
-    public void hapus() throws Exception {
+    private static void commit(ArrayList<Aktivitas> arr) throws Exception {
+        Path FILE_PATH = Paths.get(System.getProperty("user.home"), ".rotan", "aktivitas.json");
+        Gson gson = new Gson();
 
-    }
+        String json = gson.toJson(arr);
 
-    public void ubah() throws Exception {
-
+        try {
+            Files.writeString(FILE_PATH, json);
+        } catch (Exception e) {
+            throw e;
+        }
     }
 }
