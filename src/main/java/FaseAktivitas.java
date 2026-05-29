@@ -1,4 +1,3 @@
-package internal;
 import java.io.IOException;
 import java.lang.reflect.Type;
 import java.nio.file.Files;
