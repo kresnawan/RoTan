@@ -33,7 +33,7 @@ public class Lahan {
     public static ArrayList<Lahan> getSemua() {
         Path FILE_PATH = Paths.get(System.getProperty("user.home"), ".rotan", "lahan.json");
         Gson gson = new Gson();
-        
+
         if (!Files.exists(FILE_PATH)) {
             return new ArrayList<>();
         }
@@ -56,10 +56,13 @@ public class Lahan {
     }
 
     public static void hapus(int kode) throws Exception {
-        ArrayList<Lahan> lahan = Lahan.getSemua();
-        lahan.removeIf((item) -> item.kode == kode);
-
         try {
+            ArrayList<Lahan> lahan = Lahan.getSemua();
+            boolean result = lahan.removeIf((item) -> item.kode == kode);
+
+            if (!result) throw new Exception("Tidak ada lahan yang dihapus");
+
+            Aktivitas.hapusAktivitasLahan(kode);
             Lahan.commit(lahan);
         } catch (Exception e) {
             throw e;
@@ -67,7 +70,7 @@ public class Lahan {
     }
 
     public static void insert(Lahan lahanBaru) throws Exception {
-        
+
         ArrayList<Lahan> lahan = Lahan.getSemua();
 
         lahan.add(lahanBaru);
