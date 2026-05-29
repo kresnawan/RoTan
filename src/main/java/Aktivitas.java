@@ -6,7 +6,6 @@ import java.nio.file.Paths;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Iterator;
-import java.util.Stack;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -20,7 +19,6 @@ public class Aktivitas {
     LocalDate tanggalMulai;
     String namaTumbuhan;
     String catatan;
-    Stack<FaseAktivitas> fase = new Stack<FaseAktivitas>();
 
     public Aktivitas(LocalDate tanggalMulai, String nama, String namaTumbuhan, String catatan, int kodeLahan) {
         this.tanggalMulai = tanggalMulai;
@@ -38,30 +36,21 @@ public class Aktivitas {
         return aktivitas;
     }
 
-    // public void rollbackFase() throws EmptyStackException {
-    // try {
-    // this.fase.pop();
-    // } catch (EmptyStackException e) {
-    // throw e;
-    // }
-    // }
-
     public static void hapusAktivitasLahan(int kodeLahan) throws Exception {
-        ArrayList<Aktivitas> akt = Aktivitas.getSemua();
-        ArrayList<Integer> kodeAktivitas = new ArrayList<>();
-
-        Iterator<Aktivitas> aktIterator = akt.iterator();
-
-        while (aktIterator.hasNext()) {
-            Aktivitas item = aktIterator.next();
-
-            if (item.kodeLahan == kodeLahan) {
-                kodeAktivitas.add(item.kode);
-                aktIterator.remove();
-            }
-        }
-
         try {
+            ArrayList<Aktivitas> akt = Aktivitas.getSemua();
+            ArrayList<Integer> kodeAktivitas = new ArrayList<>();
+
+            Iterator<Aktivitas> aktIterator = akt.iterator();
+
+            while (aktIterator.hasNext()) {
+                Aktivitas item = aktIterator.next();
+
+                if (item.kodeLahan == kodeLahan) {
+                    kodeAktivitas.add(item.kode);
+                    aktIterator.remove();
+                }
+            }
             FaseAktivitas.hapusFaseAktivitas(kodeAktivitas);
             Aktivitas.commit(akt);
         } catch (Exception e) {
