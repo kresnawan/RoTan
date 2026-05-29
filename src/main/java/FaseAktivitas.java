@@ -37,12 +37,29 @@ public class FaseAktivitas {
     }
 
     public static void hapusFaseAktivitas(ArrayList<Integer> kodeAktivitas) throws Exception {
-        ArrayList<FaseAktivitas> fa = FaseAktivitas.getSemua();
+        try {
+            ArrayList<FaseAktivitas> fa = FaseAktivitas.getSemua();
 
-        fa.removeIf(item -> kodeAktivitas.contains(item.kodeAktivitas));
+            boolean result = fa.removeIf(item -> kodeAktivitas.contains(item.kodeAktivitas));
+
+            if (!result)
+                throw new Exception("Aktivitas tidak ditemukan");
+
+            FaseAktivitas.commit(fa);
+        } catch (Exception e) {
+            throw e;
+        }
+    }
+
+    public static void rollbackFaseAktivitas(int kodeAktivitas) throws Exception {
+        Stack<FaseAktivitas> fase = FaseAktivitas.getFaseAktivitas(kodeAktivitas);
+        ArrayList<FaseAktivitas> semuaFase = FaseAktivitas.getSemua();
 
         try {
-            FaseAktivitas.commit(fa);
+            FaseAktivitas temp = fase.pop();
+            semuaFase.removeIf(item -> item.kode == temp.kode);
+
+            FaseAktivitas.commit(semuaFase);
         } catch (Exception e) {
             throw e;
         }
@@ -51,7 +68,7 @@ public class FaseAktivitas {
     public static ArrayList<FaseAktivitas> getSemua() {
         Path FILE_PATH = Paths.get(System.getProperty("user.home"), ".rotan", "fase.json");
         Gson gson = new Gson();
-        
+
         if (!Files.exists(FILE_PATH)) {
             return new ArrayList<>();
         }
@@ -74,17 +91,22 @@ public class FaseAktivitas {
     }
 
     public static void insert(FaseAktivitas faseAktivitasBaru) throws Exception {
-        ArrayList<Aktivitas> akt = Aktivitas.getSemua();
+        try {
+            ArrayList<Aktivitas> akt = Aktivitas.getSemua();
 
-        akt.removeIf(item -> item.kode != faseAktivitasBaru.kodeAktivitas);
-        if (akt.size() == 0) throw new Exception("Aktivitas tidak ditemukan");
+            akt.removeIf(item -> item.kode != faseAktivitasBaru.kodeAktivitas);
+            if (akt.size() == 0)
+                throw new Exception("Aktivitas tidak ditemukan");
 
-        ArrayList<FaseAktivitas> fase = FaseAktivitas.getSemua();
+            ArrayList<FaseAktivitas> fase = FaseAktivitas.getSemua();
 
-        fase.add(faseAktivitasBaru);
-        fase.sort((l1, l2) -> Integer.compare(l1.kode, l2.kode));
+            fase.add(faseAktivitasBaru);
+            fase.sort((l1, l2) -> Integer.compare(l1.kode, l2.kode));
 
-        FaseAktivitas.commit(fase);
+            FaseAktivitas.commit(fase);
+        } catch (Exception e) {
+            throw e;
+        }
     }
 
     private static void commit(ArrayList<FaseAktivitas> arr) throws Exception {
