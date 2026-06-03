@@ -53,6 +53,7 @@ public class FaseAktivitas {
     }
 
     public static void rollbackFaseAktivitas(int kodeAktivitas) throws Exception {
+        FaseAktivitas.cekStatusAktivitas(kodeAktivitas);
         Stack<FaseAktivitas> fase = FaseAktivitas.getFaseAktivitas(kodeAktivitas);
         ArrayList<FaseAktivitas> semuaFase = FaseAktivitas.getSemua();
 
@@ -93,6 +94,7 @@ public class FaseAktivitas {
 
     public static void insert(FaseAktivitas faseAktivitasBaru) throws Exception {
         try {
+            FaseAktivitas.cekStatusAktivitas(faseAktivitasBaru.kodeAktivitas);
             ArrayList<Aktivitas> akt = Aktivitas.getSemua();
 
             akt.removeIf(item -> item.kode != faseAktivitasBaru.kodeAktivitas);
@@ -107,6 +109,15 @@ public class FaseAktivitas {
             FaseAktivitas.commit(fase);
         } catch (Exception e) {
             throw e;
+        }
+    }
+
+    private static void cekStatusAktivitas(int kodeAktivitas) throws Exception {
+        ArrayList<Aktivitas> arr = Aktivitas.getSemua();
+        arr.removeIf(item -> item.kode != kodeAktivitas);
+
+        if (arr.getFirst().selesai == true) {
+            throw new Exception("Aktivitas telah dinyatakan selesai");
         }
     }
 

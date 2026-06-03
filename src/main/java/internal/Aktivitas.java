@@ -16,6 +16,7 @@ import utils.Kode;
 public class Aktivitas {
     int kode;
     int kodeLahan;
+    boolean selesai = false;
     String nama;
     LocalDate tanggalMulai;
     String namaTumbuhan;
@@ -35,6 +36,17 @@ public class Aktivitas {
         ArrayList<Aktivitas> aktivitas = Aktivitas.getSemua();
         aktivitas.removeIf(item -> item.kodeLahan != kodeLahan);
         return aktivitas;
+    }
+
+    public static void setSelesai(int kodeAktivitas) throws Exception {
+        ArrayList<Aktivitas> arr = Aktivitas.getSemua();
+        arr.forEach(item -> {
+            if (item.kode == kodeAktivitas) {
+                item.selesai = true;
+            }
+        });
+
+        Aktivitas.commit(arr);
     }
 
     public static void hapusAktivitasLahan(int kodeLahan) throws Exception {
