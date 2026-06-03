@@ -14,19 +14,25 @@ public class Kode {
             if (tipe.equals("lahan")) {
                 int kodeTerakhir = Integer.parseInt(arr[0]);
                 int kode = kodeTerakhir + 1;
-                Files.writeString(FILE_PATH, String.format("%d,%s,%s", kode, arr[1], arr[2]));
+                Files.writeString(FILE_PATH, String.format("%d,%s,%s,%s", kode, arr[1], arr[2], arr[3]));
 
                 return kodeTerakhir + 1;
             } else if (tipe.equals("aktivitas")) {
                 int kodeTerakhir = Integer.parseInt(arr[1]);
                 int kode = kodeTerakhir + 1;
-                Files.writeString(FILE_PATH, String.format("%s,%d,%s", arr[0], kode, arr[2]));
+                Files.writeString(FILE_PATH, String.format("%s,%d,%s,%s", arr[0], kode, arr[2], arr[3]));
 
                 return kodeTerakhir + 1;
             } else if (tipe.equals("fase")) {
                 int kodeTerakhir = Integer.parseInt(arr[2]);
                 int kode = kodeTerakhir + 1;
-                Files.writeString(FILE_PATH, String.format("%s,%s,%d", arr[0], arr[1], kode));
+                Files.writeString(FILE_PATH, String.format("%s,%s,%d,%s", arr[0], arr[1], kode, arr[3]));
+
+                return kodeTerakhir + 1;
+            } else if (tipe.equals("template_aktivitas")) {
+                int kodeTerakhir = Integer.parseInt(arr[3]);
+                int kode = kodeTerakhir + 1;
+                Files.writeString(FILE_PATH, String.format("%s,%s,%s,%d", arr[0], arr[1], arr[2], kode));
 
                 return kodeTerakhir + 1;
             } else {
