@@ -21,6 +21,8 @@ Menambahkan aktivitas baru.<br><br>
 Menghapus aktivitas berdasarkan kode aktivitas, **semua data fase pada data aktivitas yang dihapus juga akan ikut terhapus.**<br><br>
 `Aktivitas.hapusAktivitasLahan(int)` (static `void`)<br>
 Menghapus semua data aktivitas dari lahan tertentu.<br><br>
+`Aktivitas.setSelesai(int kodeAktivitas)` (static `void`)<br>
+Menyatakan selesai suatu aktivitas dengan kode tertentu, aktivitas yang telah selesai tidak bisa dihapus maupun ditambahkan fase baru.<br><br>
 
 **Fase:**<br>
 `FaseAktivitas.getSemua()` (static `ArrayList<FaseAktivitas>`)<br>
