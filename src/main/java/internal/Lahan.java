@@ -5,6 +5,8 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.Iterator;
+
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
@@ -78,6 +80,20 @@ public class Lahan {
         lahan.sort((l1, l2) -> Integer.compare(l1.kode, l2.kode));
 
         Lahan.commit(lahan);
+    }
+
+    public static double getLuasTerpakai(int kodeLahan) {
+        ArrayList<Aktivitas> akt = Aktivitas.getAktivitasLahan(kodeLahan);
+        double res = 0;
+
+        Iterator<Aktivitas> akIterator = akt.iterator();
+        while (akIterator.hasNext()) {
+            Aktivitas item = akIterator.next();
+
+            res += item.luas;
+        }
+
+        return res;
     }
 
     private static void commit(ArrayList<Lahan> arr) throws Exception {

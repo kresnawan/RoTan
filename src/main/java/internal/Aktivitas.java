@@ -1,4 +1,5 @@
 package internal;
+
 import java.io.IOException;
 import java.lang.reflect.Type;
 import java.nio.file.Files;
@@ -21,15 +22,15 @@ public class Aktivitas {
     LocalDate tanggalMulai;
     String namaTumbuhan;
     String catatan;
+    double luas;
 
-    public Aktivitas(LocalDate tanggalMulai, String nama, String namaTumbuhan, String catatan, int kodeLahan) {
+    public Aktivitas(LocalDate tanggalMulai, String nama, String namaTumbuhan, String catatan, int kodeLahan, double luas) {
         this.tanggalMulai = tanggalMulai;
         this.namaTumbuhan = namaTumbuhan;
         this.catatan = catatan;
         this.nama = nama;
-
-        this.kode = Kode.generateKode("aktivitas");
         this.kodeLahan = kodeLahan;
+        this.luas = luas;
     }
 
     public static ArrayList<Aktivitas> getAktivitasLahan(int kodeLahan) {
@@ -87,18 +88,27 @@ public class Aktivitas {
     }
 
     public static void insert(Aktivitas aktivitas) throws Exception {
-        ArrayList<Aktivitas> akt = Aktivitas.getSemua();
+        try {
+            aktivitas.kode = Kode.generateKode("aktivitas");
+            ArrayList<Aktivitas> akt = Aktivitas.getSemua();
 
-        ArrayList<Lahan> lh = Lahan.getSemua();
-        lh.removeIf(item -> item.kode != aktivitas.kodeLahan);
+            ArrayList<Lahan> lh = Lahan.getSemua();
+            lh.removeIf(item -> item.kode != aktivitas.kodeLahan);
 
-        if (lh.size() == 0)
-            throw new Exception("Lahan tidak ditemukan");
+            if (lh.size() == 0)
+                throw new Exception("Lahan tidak ditemukan");
 
-        akt.add(aktivitas);
-        akt.sort((l1, l2) -> Integer.compare(l1.kode, l2.kode));
+            if (Lahan.getLuasTerpakai(aktivitas.kodeLahan) + aktivitas.luas > lh.get(0).luas) {
+                throw new Exception("Luas yang dialokasikan untuk aktivitas melebihi batas");
+            }
 
-        Aktivitas.commit(akt);
+            akt.add(aktivitas);
+            akt.sort((l1, l2) -> Integer.compare(l1.kode, l2.kode));
+
+            Aktivitas.commit(akt);
+        } catch (Exception e) {
+            throw e;
+        }
     }
 
     public static ArrayList<Aktivitas> getSemua() {
@@ -124,6 +134,16 @@ public class Aktivitas {
         } catch (IOException e) {
             return new ArrayList<>();
         }
+    }
+
+    public static Aktivitas getByKode(int kode) {
+        ArrayList<Aktivitas> arr = Aktivitas.getSemua();
+        arr.removeIf(item -> item.kode != kode);
+
+        if (arr.size() == 0)
+            return null;
+
+        return arr.getFirst();
     }
 
     private static void commit(ArrayList<Aktivitas> arr) throws Exception {
