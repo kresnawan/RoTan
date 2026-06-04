@@ -13,11 +13,11 @@ import com.google.gson.reflect.TypeToken;
 import utils.Kode;
 
 public class Lahan {
-    int kode;
+    public int kode;
     public String nama;
-    double luas;
-    double panjang;
-    double lebar;
+    public double luas;
+    public double panjang;
+    public double lebar;
 
     public Lahan(String nama, double luas) {
         this.kode = Kode.generateKode("lahan");
