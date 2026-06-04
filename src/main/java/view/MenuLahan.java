@@ -25,8 +25,10 @@ public class MenuLahan {
                     getDaftarLahan();
                     break;
                 case "2":
+                    
                     break;
                 case "3":
+                    hapusLahan(scanner);
                     break;
                 case "0":
                     MenuUtama.tampilkan(scanner);
@@ -54,4 +56,31 @@ public class MenuLahan {
         }
     }
 
+    private static void hapusLahan(Scanner scanner){
+        getDaftarLahan();
+
+        if (internal.Lahan.getSemua().isEmpty()){
+            return;
+        }
+
+        System.out.println("Masukkan kode lahan yang ingin dihapus");
+        System.out.println("Atau ketik '0' Untuk membatalkan penghapusan");
+
+        try {
+            int kode = Integer.parseInt(scanner.nextLine());
+            
+            if (kode == 0) {
+                System.out.println("Penghapusan dibatalkan");
+                return;
+            }
+
+            internal.Lahan.hapus(kode);
+            System.out.println("Lahan ke-"+ kode+ " telah berhasil dihapus");
+
+        } catch (NumberFormatException n) {
+            System.out.println("Input harus berupa angka");
+        } catch (Exception e){
+            System.out.println("Gagal Menghapus" + e);
+        }
+    }
 }
