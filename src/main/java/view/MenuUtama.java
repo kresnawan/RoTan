@@ -14,6 +14,11 @@ public class MenuUtama {
             System.out.println("0. Keluar Aplikasi");
             System.out.println("Masukkan angka sesuai opsi menu");
 
+            if (!scanner.hasNextLine()) {
+                System.out.println("Input tidak tersedia. Keluar.");
+                return;
+            }
+
             String opsi = scanner.nextLine();
             switch (opsi) {
                 case "1":
