@@ -4,20 +4,22 @@ import java.util.ArrayList;
 import java.util.Scanner;
 
 import internal.Lahan;
+import utils.ColorCode;
+import utils.Displayer;
 
 public class MenuLahan {
     public static void tampilkan(Scanner scanner) {
         boolean running = true;
 
         while (running){
-            System.out.println("""
-                    Menu Aktivitas
-                    1. Lihat daftar lahan
-                    2. Tambah Lahan baru
-                    3. Hapus Lahan
-                    0. Kembali ke menu
-                    Masukkan opsi sesuai dengan menu
-                    """);
+            System.out.println("Menu Lahan");
+            System.out.println("1. Lihat daftar lahan");
+            System.out.println("2. Tambah Lahan baru");
+            System.out.println("3. Hapus Lahan");
+            System.out.println("0. Kembali ke menu");
+            System.out.println("Masukkan angka sesuai opsi menu");
+
+            System.out.printf("\n%s (Lahan)> ", Displayer.colorizeText("[RoTan]", ColorCode.KUNING, true));
                     
             String opsi = scanner.nextLine();
             switch (opsi) {
@@ -32,7 +34,7 @@ public class MenuLahan {
                     break;
                 case "0":
                     MenuUtama.tampilkan(scanner);
-                    break;
+                    return;
                 default:
                     System.out.println("Masukkan opsi yang valid");
                     break;
@@ -83,7 +85,7 @@ public class MenuLahan {
             Lahan lahanBaru = new Lahan(nama, luas);
             Lahan.insert(lahanBaru);
 
-            System.out.println("\nLahan berhasil ditambahkan");
+            System.out.printf("\n%s\n", Displayer.colorizeText("Lahan berhasil ditambahkan", ColorCode.HIJAU, true));
 
         } catch (NumberFormatException e) {
             System.out.println("\nLuas harus berupa angka");
