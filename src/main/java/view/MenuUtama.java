@@ -28,6 +28,7 @@ public class MenuUtama {
                     return;
                 case "0":
                     System.out.println("Keluar dari RoTan...");
+                    System.exit(0);
                     return;
                 default:
                     System.out.println("Perintah tidak valid");

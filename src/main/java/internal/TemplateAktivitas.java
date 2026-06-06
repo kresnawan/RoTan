@@ -30,8 +30,10 @@ public class TemplateAktivitas {
             ArrayList<Aktivitas> akt = TemplateAktivitas.getSemua();
             int kodeTemplate = Kode.generateKode("template_aktivitas");
 
-            aktivitas.kode = kodeTemplate;
-            aktivitas.kodeLahan = 0;
+            Aktivitas newObj = new Aktivitas(aktivitas.tanggalMulai, aktivitas.nama, aktivitas.namaTumbuhan, aktivitas.catatan, 0, aktivitas.luas);
+
+            newObj.kode = kodeTemplate;
+            newObj.kodeLahan = 0;
 
             akt.add(aktivitas);
 
