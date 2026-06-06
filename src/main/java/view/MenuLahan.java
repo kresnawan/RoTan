@@ -42,7 +42,7 @@ public class MenuLahan {
         }
     }
 
-    private static void getDaftarLahan(){
+    public static void getDaftarLahan(){
         ArrayList<Lahan> daftarLahan = Lahan.getSemua();
 
         if (daftarLahan.isEmpty()){
