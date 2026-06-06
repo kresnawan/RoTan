@@ -14,10 +14,10 @@ public class MenuLahan {
 
         while (running){
             System.out.println("Menu Lahan");
-            System.out.println("1. Lihat daftar lahan");
-            System.out.println("2. Tambah Lahan baru");
-            System.out.println("3. Hapus Lahan");
-            System.out.println("0. Kembali ke menu");
+            System.out.println("    1    Lihat daftar lahan");
+            System.out.println("    2    Tambah Lahan baru");
+            System.out.println("    3    Hapus Lahan");
+            System.out.println("    0    Kembali ke menu");
             System.out.println("Masukkan angka sesuai opsi menu");
 
             System.out.printf("\n%s (Lahan)> ", Displayer.colorizeText("[RoTan]", ColorCode.KUNING, true));
