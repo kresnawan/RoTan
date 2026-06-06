@@ -41,10 +41,7 @@ public class FaseAktivitas {
         try {
             ArrayList<FaseAktivitas> fa = FaseAktivitas.getSemua();
 
-            boolean result = fa.removeIf(item -> kodeAktivitas.contains(item.kodeAktivitas));
-
-            if (!result)
-                throw new Exception("Aktivitas tidak ditemukan");
+            fa.removeIf(item -> kodeAktivitas.contains(item.kodeAktivitas));
 
             FaseAktivitas.commit(fa);
         } catch (Exception e) {
