@@ -46,7 +46,9 @@ public class MenuLahan {
         ArrayList<Lahan> daftarLahan = Lahan.getSemua();
 
         if (daftarLahan.isEmpty()){
-            System.out.println("Belum ada lahan yang terdaftar");
+            System.out.println("+--------------------------------------------+");
+            System.out.println("|        Belum ada lahan yang terdaftar      |");
+            System.out.println("+--------------------------------------------+\n");
             return;
         } else {
             System.out.println("+------+--------------------+----------------+");
