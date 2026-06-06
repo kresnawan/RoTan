@@ -14,10 +14,10 @@ import com.google.gson.reflect.TypeToken;
 import utils.Kode;
 
 public class FaseAktivitas {
-    int kode;
-    int kodeAktivitas;
-    LocalDate tanggal;
-    String catatan;
+    public int kode;
+    public int kodeAktivitas;
+    public LocalDate tanggal;
+    public String catatan;
 
     public FaseAktivitas(int kodeAktivitas, LocalDate tanggal, String catatan) {
         this.kode = Kode.generateKode("fase");
