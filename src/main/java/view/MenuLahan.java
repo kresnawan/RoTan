@@ -3,6 +3,7 @@ package view;
 import java.util.ArrayList;
 import java.util.Scanner;
 
+import internal.Aktivitas;
 import internal.Lahan;
 import utils.ColorCode;
 import utils.Displayer;
@@ -25,6 +26,7 @@ public class MenuLahan {
             switch (opsi) {
                 case "1":
                     getDaftarLahan();
+                    promptDetailLahan(scanner);
                     break;
                 case "2":
                     tambahLahan(scanner);
@@ -50,15 +52,112 @@ public class MenuLahan {
             System.out.println("|        Belum ada lahan yang terdaftar      |");
             System.out.println("+--------------------------------------------+\n");
             return;
-        } else {
-            System.out.println("+------+--------------------+----------------+");
-            System.out.println("| Kode |        Nama        | Luas           |");
-            System.out.println("+------+--------------------+----------------+");
-            for (Lahan l: daftarLahan){
-                System.out.printf("| %-4d | %-18s | %-14.2f |\n", l.kode, l.nama, l.luas);
-            }
-            System.out.println("+------+--------------------+----------------+");
         }
+
+        String garis = "+------+--------------------+------------+------------+------------+-----------+";
+        String header = String.format("| %-4s | %-18s | %-10s | %-10s | %-10s | %-9s |",
+                "Kode", "Nama", "Luas", "Terpakai", "Sisa", "Aktivitas");
+
+        System.out.println(garis);
+        System.out.println(Displayer.colorizeText(header, ColorCode.CYAN, true));
+        System.out.println(garis);
+
+        for (Lahan l : daftarLahan) {
+            double luasTerpakai = Lahan.getLuasTerpakai(l.kode);
+            double sisa = l.luas - luasTerpakai;
+            int jumlahAktivitas = Aktivitas.getAktivitasLahan(l.kode).size();
+
+            String infoAktivitas = jumlahAktivitas == 0 ? "Tidak ada" : String.valueOf(jumlahAktivitas);
+
+            String baris = String.format("| %-4d | %-18s | %7.2f ha | %7.2f ha | %7.2f ha | %-9s |",
+                    l.kode, l.nama, l.luas, luasTerpakai, sisa, infoAktivitas);
+
+            if (sisa <= 0) {
+                System.out.println(Displayer.colorizeText(baris, ColorCode.MERAH, false));
+            } else {
+                System.out.println(Displayer.colorizeText(baris, ColorCode.HIJAU, false));
+            }
+        }
+        System.out.println(garis);
+    }
+
+    private static void promptDetailLahan(Scanner scanner) {
+        ArrayList<Lahan> daftarLahan = Lahan.getSemua();
+        if (daftarLahan.isEmpty()) return;
+
+        System.out.println("\nMasukkan kode lahan untuk melihat detail, atau ketik '0' untuk kembali");
+        System.out.printf("%s (Detail)> ", Displayer.colorizeText("[RoTan]", ColorCode.KUNING, true));
+
+        try {
+            int kode = Integer.parseInt(scanner.nextLine().trim());
+
+            if (kode == 0) return;
+
+            lihatDetailLahan(kode);
+        } catch (NumberFormatException e) {
+            System.out.println(Displayer.colorizeText("Input harus berupa angka", ColorCode.MERAH, false));
+        }
+    }
+
+    private static void lihatDetailLahan(int kodeLahan) {
+        ArrayList<Lahan> semua = Lahan.getSemua();
+        Lahan target = null;
+
+        for (Lahan l : semua) {
+            if (l.kode == kodeLahan) {
+                target = l;
+                break;
+            }
+        }
+
+        if (target == null) {
+            System.out.println(Displayer.colorizeText("Lahan dengan kode " + kodeLahan + " tidak ditemukan", ColorCode.MERAH, true));
+            return;
+        }
+
+        double luasTerpakai = Lahan.getLuasTerpakai(kodeLahan);
+        double sisa = target.luas - luasTerpakai;
+
+        System.out.println("\n" + Displayer.colorizeText("=== Detail Lahan: " + target.nama + " ===", ColorCode.CYAN, true));
+        System.out.printf("  Kode          : %d\n", target.kode);
+        System.out.printf("  Luas Total    : %.2f ha\n", target.luas);
+        System.out.printf("  Luas Terpakai : %.2f ha\n", luasTerpakai);
+        System.out.printf("  Sisa Lahan    : %s\n",
+                Displayer.colorizeText(String.format("%.2f ha", sisa),
+                        sisa <= 0 ? ColorCode.MERAH : ColorCode.HIJAU, true));
+
+        ArrayList<Aktivitas> aktivitas = Aktivitas.getAktivitasLahan(kodeLahan);
+
+        if (aktivitas.isEmpty()) {
+            System.out.println("\n  " + Displayer.colorizeText("Belum ada aktivitas di lahan ini", ColorCode.KUNING, false));
+            System.out.println();
+            return;
+        }
+
+        System.out.println("\n" + Displayer.colorizeText("  --- Daftar Aktivitas ---", ColorCode.CYAN, false));
+
+        String garisAkt  = "  +------+--------------------+------------------+----------+---------+";
+        String headerAkt = String.format("  | %-4s | %-18s | %-16s | %-8s | %-7s |",
+                "Kode", "Nama Proyek", "Tumbuhan", "Luas", "Status");
+
+        System.out.println(garisAkt);
+        System.out.println(Displayer.colorizeText(headerAkt, ColorCode.CYAN, true));
+        System.out.println(garisAkt);
+
+        for (Aktivitas a : aktivitas) {
+            String status = a.selesai ? "Selesai" : "Aktif";
+
+            String baris = String.format("  | %-4d | %-18s | %-16s | %5.2f ha | %-7s |",
+                    a.kode, a.nama, a.namaTumbuhan, a.luas, status);
+
+            if (a.selesai) {
+                System.out.println(Displayer.colorizeText(baris, ColorCode.KUNING, false));
+            } else {
+                System.out.println(Displayer.colorizeText(baris, ColorCode.HIJAU, false));
+            }
+        }
+        System.out.println(garisAkt);
+        System.out.println();
     }
 
     private static void tambahLahan(Scanner scanner) {
@@ -140,3 +239,4 @@ public class MenuLahan {
         return capitalized.toString().trim();
     }
 }
+

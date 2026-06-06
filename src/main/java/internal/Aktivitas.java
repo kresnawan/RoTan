@@ -15,14 +15,14 @@ import com.google.gson.reflect.TypeToken;
 import utils.Kode;
 
 public class Aktivitas {
-    int kode;
-    int kodeLahan;
-    boolean selesai = false;
-    String nama;
-    LocalDate tanggalMulai;
-    String namaTumbuhan;
-    String catatan;
-    double luas;
+    public int kode;
+    public int kodeLahan;
+    public boolean selesai = false;
+    public String nama;
+    public LocalDate tanggalMulai;
+    public String namaTumbuhan;
+    public String catatan;
+    public double luas;
 
     public Aktivitas(LocalDate tanggalMulai, String nama, String namaTumbuhan, String catatan, int kodeLahan, double luas) {
         this.tanggalMulai = tanggalMulai;
