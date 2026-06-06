@@ -11,9 +11,9 @@ public class MenuUtama {
 
         while (running){
             System.out.println("Menu Utama");
-            System.out.println("1. Kelola Lahan");
-            System.out.println("2. Kelola Aktivitas");
-            System.out.println("0. Keluar Aplikasi");
+            System.out.println("    1    Kelola Lahan");
+            System.out.println("    2    Kelola Aktivitas");
+            System.out.println("    0    Keluar Aplikasi");
             System.out.println("Masukkan angka sesuai opsi menu");
 
             System.out.printf("\n%s# ", Displayer.colorizeText("[RoTan]", ColorCode.KUNING, true));
@@ -30,7 +30,8 @@ public class MenuUtama {
                     System.out.println("Keluar dari RoTan...");
                     return;
                 default:
-                    System.out.println("Masukkan perintah yang valid");
+                    System.out.println("Perintah tidak valid");
+                    break;
             }
         }
     }
